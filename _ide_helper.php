@@ -14679,7 +14679,7 @@
                     /**
          * Adds a data collector
          *
-         * @param \Barryvdh\Debugbar\DataCollectorInterface $collector
+         * @param \DebugBar\DataCollector\DataCollectorInterface $collector
          * @throws DebugBarException
          * @return \Barryvdh\Debugbar\LaravelDebugbar 
          * @static 
@@ -14888,7 +14888,7 @@
          * Returns a data collector
          *
          * @param string $name
-         * @return \DebugBar\DataCollectorInterface 
+         * @return \DebugBar\DataCollector\DataCollectorInterface 
          * @throws DebugBarException
          * @static 
          */ 
