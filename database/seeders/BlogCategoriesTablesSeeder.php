@@ -30,7 +30,7 @@ class BlogCategoriesTablesSeeder extends Seeder
 			$categories[] = [
 				'title' => $cName,
 				'slug' => str_slug( $cName ),
-				'parent_id' => 0,
+				'parent_id' => $parentId,
 			];
 		}
 

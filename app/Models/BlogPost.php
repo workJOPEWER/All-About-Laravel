@@ -8,5 +8,6 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 
 class BlogPost extends Model
 {
-    use SoftDeletes; //трейд
+	use HasFactory;
+	use SoftDeletes; //трейд
 }

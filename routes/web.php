@@ -12,15 +12,27 @@ use Illuminate\Support\Facades\Route;
 | contains the "web" middleware group. Now create something great!
 |
 */
-
-Route::get('/', function () {
-    return view('welcome');
-});
-
-Route::group(['namespace' => 'Blog', 'prefix' => 'blog'], function () {
-	Route::resource('posts', '\App\Http\Controllers\Blog\PostController')->names('blog.posts');
-});
-
 Auth::routes();
 
-Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
+Route::get( '/home', [App\Http\Controllers\HomeController::class, 'index'] )->name( 'home' );
+
+Route::get( '/', function () {
+	return view( 'welcome' );
+} );
+
+Route::group( ['namespace' => 'Blog', 'prefix' => 'blog'], function () {
+	Route::resource( 'posts', '\App\Http\Controllers\Blog\PostController' )->names( 'blog.posts' );
+} );
+
+//admin panel
+$groupData = [
+	'namespace' => 'Blog\Admin',
+	'prefix' => 'admin/blog',
+];
+Route::group( $groupData, function () {
+	//BlogCategory
+	$methods = ['index', 'edit', 'update', 'create', 'store'];
+	Route::resource( 'categories', 'CategoryController' )
+		->only( $methods )
+		->names( 'blog.admin.categories' );
+} );
