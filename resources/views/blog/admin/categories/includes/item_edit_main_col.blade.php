@@ -47,12 +47,12 @@
                             </select>
                         </div>
                         <div class="form-group">
-                            <label for="description">description</label>
+                            <label for="description">Описание</label>
                             <textarea name="description" value="{{$item->slug}}"
                                       id="description"
                                       rows="3"
                                       class="form-control">
-                                {{$item->description}}
+                                {{old('description', $item->description)}}
                             </textarea>
                         </div>
                     </div>
