@@ -74,9 +74,34 @@ class CategoryController extends BaseController
 	 * @param  \Illuminate\Http\Request $request
 	 * @param  int $id
 	 * @return \Illuminate\Http\Response
+	 * @throws \Illuminate\Validation\ValidationException
 	 */
 	public function update(Request $request, $id)
 	{
+		$rules = [
+			'title' => 'required|min:5|max:200',
+			'slug' => 'max:200',
+			'description' => 'string|max:200|min:3',
+			'parent_id' => 'required|integer|exists:blog_categories,id',
+
+		];
+		/*способы валидации данных*/
+
+		//обратились к контролеру
+		//$validateData = $this->validate($request, $rules);
+		//обратились к реквесту
+		//$validateData = $request->validate($rules);
+
+		/*$validator = \Validator::make( $request->all(), $rules );
+		$validateData[] = $validator->passes();
+		$validateData[] = $validator->validate();
+		$validateData[] = $validator->valid();
+		$validateData[] = $validator->failed();
+		$validateData[] = $validator->errors();
+		$validateData[] = $validator->fails();
+
+		dd( $validateData );*/
+
 		/*dd(__METHOD__, $request->all(), $id);*/
 		$item = BlogCategory::find( $id );
 		if (empty( $item )) {
@@ -86,15 +111,17 @@ class CategoryController extends BaseController
 		}
 
 		$data = $request->all();
-		$request = $item->fill( $data )->save();
+		$request = $item
+			->fill( $data )
+			->save();
 
 		if ($request) {
 			return redirect()
 				->route( 'blog.admin.categories.edit', $item->id )
 				->with( ['success' => 'Успешно сохраненно'] );
-		}else {
+		} else {
 			return back()
-				->withErrors(['msg' => 'Ошибка сохранения'])
+				->withErrors( ['msg' => 'Ошибка сохранения'] )
 				->withInput();
 		}
 	}
