@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\BlogCategoryCreateRequest;
 use App\Http\Requests\BlogCategoryUpdateRequest;
 use App\Models\BlogCategory;
+use App\Repositories\BlogCategoryRepository;
 use Illuminate\Http\Request;
 
 class CategoryController extends BaseController
@@ -35,8 +36,8 @@ class CategoryController extends BaseController
 		$item = new BlogCategory();
 		$categoryList = BlogCategory::all();
 
-		return view('blog.admin.categories.edit',
-			compact('item','categoryList'));
+		return view( 'blog.admin.categories.edit',
+			compact( 'item', 'categoryList' ) );
 	}
 
 	/**
@@ -48,8 +49,8 @@ class CategoryController extends BaseController
 	public function store(BlogCategoryCreateRequest $request)
 	{
 		$data = $request->input(); /* получаем данные*/
-		if(empty($data['slug'])) {
-			$data['slug'] = str_slug($data['title']);
+		if (empty( $data['slug'] )) {
+			$data['slug'] = str_slug( $data['title'] );
 		}
 
 		//создаем объект и не добавляем в БД
@@ -57,13 +58,13 @@ class CategoryController extends BaseController
 //		$item->save();
 
 		//создаем объект и добавляем в БД
-		$item = (new BlogCategory())->create($data);
+		$item = (new BlogCategory())->create( $data );
 
-		if($item) {
-			return redirect()->route('blog.admin.categories.edit', [$item->id])
-				->with(['success' => 'Успешно сохранено']);
-		}else {
-			return back()->withErrors(['msg' => 'Ошибка сохрания'])
+		if ($item) {
+			return redirect()->route( 'blog.admin.categories.edit', [$item->id] )
+				->with( ['success' => 'Успешно сохранено'] );
+		} else {
+			return back()->withErrors( ['msg' => 'Ошибка сохрания'] )
 				->withInput();
 		}
 	}
@@ -83,12 +84,21 @@ class CategoryController extends BaseController
 	 * Show the form for editing the specified resource.
 	 *
 	 * @param  int $id
+	 * @param BlogCategoryRepository $categoryRepository
 	 * @return \Illuminate\Http\Response
 	 */
-	public function edit($id)
+	public function edit($id, BlogCategoryRepository $categoryRepository)
 	{
-		$item = BlogCategory::findOrFail( $id ); //404
-		$categoryList = BlogCategory::all();
+/*		$item = BlogCategory::findOrFail( $id ); //404
+		$categoryList = BlogCategory::all();*/
+
+		//$categoryRepository = new BlogCategoryRepository();
+
+		$item = $categoryRepository->getEdit( $id );
+		if(empty($item)) {
+			abort(404);
+		}
+		$categoryList = $categoryRepository->getForComboBox(); /*выподающий список*/
 
 		return view( 'blog.admin.categories.edit',
 			compact( 'item', 'categoryList' ) );
@@ -104,31 +114,7 @@ class CategoryController extends BaseController
 	 */
 	public function update(BlogCategoryUpdateRequest $request, $id)
 	{
-		/*$rules = [
-			'title' => 'required|min:5|max:200',
-			'slug' => 'max:200',
-			'description' => 'string|max:200|min:3',
-			'parent_id' => 'required|integer|exists:blog_categories,id',
 
-		];*/
-		/*способы валидации данных*/
-
-		//обратились к контролеру
-		//$validateData = $this->validate($request, $rules);
-		//обратились к реквесту
-		//$validateData = $request->validate($rules);
-
-		/*$validator = \Validator::make( $request->all(), $rules );
-		$validateData[] = $validator->passes();
-		$validateData[] = $validator->validate();
-		$validateData[] = $validator->valid();
-		$validateData[] = $validator->failed();
-		$validateData[] = $validator->errors();
-		$validateData[] = $validator->fails();
-
-		dd( $validateData );*/
-
-		/*dd(__METHOD__, $request->all(), $id);*/
 		$item = BlogCategory::find( $id );
 		if (empty( $item )) {
 			return back()
@@ -138,13 +124,13 @@ class CategoryController extends BaseController
 
 		$data = $request->all();
 
-		if(empty($data['slug'])) {
-			$data['slug'] = str_slug($data['title']);
+		if (empty( $data['slug'] )) {
+			$data['slug'] = str_slug( $data['title'] );
 		}
 
-		$request = $item
-			->fill( $data )
-			->save();
+		$request = $item->update( $data );
+//			->fill( $data )
+//			->save();
 
 		if ($request) {
 			return redirect()
