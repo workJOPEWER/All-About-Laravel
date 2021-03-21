@@ -10,4 +10,8 @@ class BlogPost extends Model
 {
 	use HasFactory;
 	use SoftDeletes; //трейд
+
+	/*protected $dates = [
+		'published_at',
+	];*/
 }
