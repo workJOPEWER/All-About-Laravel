@@ -11,7 +11,27 @@ class BlogPost extends Model
 	use HasFactory;
 	use SoftDeletes; //трейд
 
-	/*protected $dates = [
-		'published_at',
-	];*/
+	/**
+	 * Категориий статей
+	 *
+	 * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+	 */
+	public function category()
+	{
+		//статья принадлежит категории
+		return $this->belongsTo( BlogCategory::class );
+	}
+
+	/**
+	 *  Автор статьй
+	 *
+	 * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+	 */
+
+	public function user()
+	{
+		//статья принадлежит пользователю
+		return $this->belongsTo( User::class );
+	}
+
 }

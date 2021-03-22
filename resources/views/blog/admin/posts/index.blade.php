@@ -25,10 +25,10 @@
                                     /** @var \App\Models\BlogPost $post*/
                                 @endphp
                                 {{--черновики--}}
-                                <tr @if(!$post->is_published) style="background-color: #1d68a7" @endif>
+                                <tr @if(!$post->is_published) style="background-color: #c6e0f5" @endif>
                                     <td>{{$post->id}}</td>
-                                    <td>{{$post->user_id}}</td>
-                                    <td>{{$post->category_id}}</td>
+                                    <td>{{$post->user->name}}</td>
+                                    <td>{{$post->category->title}}</td>
                                     <td>
                                         <a href="{{route('blog.admin.posts.edit', $post->id)}}">
                                             {{$post->title}}
