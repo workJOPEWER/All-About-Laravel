@@ -43,17 +43,30 @@ class BlogPostRepository extends CoreRepository
 		$result = $this->startConditions()
 			->select( $columns )
 			->orderBy( 'id', 'DESC' )
-			->with( ['category', 'user'] )
-//			->with( [
-//				// можно так
-//				'category' => function ($query) {
-//					$query->select( ['id', 'title'] );
-//				},
-//				//или так
-//				'user:id,name',
-//			] )
+//			->with( ['category', 'user'] )
+			->with( [
+				// можно так
+				'category' => function ($query) {
+					$query->select( ['id', 'title'] );
+				},
+				//или так
+				'user:id,name',
+			] )
 			->paginate( 25 );
 
 		return $result;
+	}
+
+	/**
+	 * Получить модель для редактирования в админке.
+	 *
+	 * @param int $id
+	 *
+	 * @return Model
+	 *
+	 */
+	public function getEdit($id)
+	{
+		return $this->startConditions()->find($id);
 	}
 }
