@@ -65,7 +65,7 @@ class CategoryController extends BaseController
 	{
 		$data = $request->input(); /* получаем данные*/
 		if (empty( $data['slug'] )) {
-			$data['slug'] = str_slug( $data['title'] );
+			$data['slug'] = \Str::slug( $data['title'] );
 		}
 
 		//создаем объект и добавляем в БД
@@ -121,7 +121,7 @@ class CategoryController extends BaseController
 
 		$data = $request->all();
 		if (empty( $data['slug'] )) {
-			$data['slug'] = str_slug( $data['title'] );
+			$data['slug'] = \Str::slug( $data['title'] );
 		}
 
 		$request = $item->update( $data );
