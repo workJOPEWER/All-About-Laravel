@@ -17,6 +17,31 @@ class BlogCategoryObserver
         //запись создана
     }
 
+
+	/**
+	 * Handle the BlogCategory "created" event.
+	 *
+	 * @param  BlogCategory  $blogCategory
+	 * @return void
+	 */
+	public function creating(BlogCategory $blogCategory)
+	{
+		$this->setSlug($blogCategory);
+	}
+
+	/**
+	 * если поле пустое, то заполняем его конвертацией заговка
+	 *
+	 * @param  \App\Models\BlogCategory  $blogCategory
+	 * @return void
+	 */
+	protected function setSlug(BlogCategory $blogCategory)
+	{
+		if(empty($blogCategory->slug)) {
+			$blogCategory->slug = \Str::slug($blogCategory->title);
+		}
+	}
+
     /**
      * Handle the BlogCategory "updated" event.
      *
@@ -26,6 +51,14 @@ class BlogCategoryObserver
     public function updated(BlogCategory $blogCategory)
     {
         //
+    }
+
+    /***
+	 * @param BlogCategory$blogCategory
+    */
+    public function updating(BlogCategory $blogCategory)
+    {
+        $this->setSlug($blogCategory);
     }
 
     /**
