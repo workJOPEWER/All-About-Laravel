@@ -28,7 +28,25 @@
                                         </a>
                                     </td>
                                     <td @if(in_array($item->parent_id, [0, 4])) style="..."@endif>
-                                        {{$item->parent_id}}
+
+                                        {{--{{$item->parentCategory->title ?? '?'}}--}}
+
+                                        {{--возвращает null. если не найдена parent_id. оберег=)--}}
+                                      {{--  {{optional($item->parentCategory)->title}}--}}
+
+                                       {{-- {{$item->parentCategory()->title
+                                            ?? ($item->id === \App\Models\BlogCategory::ROOT
+                                                ? 'Корень'
+                                                : '???')
+                                        }}--}}
+
+                                        {{--mutators--}}
+                                        {{--{{$item->parent_title}}--}}
+
+                                        {{--правильная запись для аксесора модели--}}
+                                        {{$item->parentTitle}}
+
+
                                     </td>
                                 </tr>
                             @endforeach
