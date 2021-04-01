@@ -88,6 +88,19 @@ class CategoryController extends BaseController
 	{
 
 		$item = $this->blogCategoryRepository->getEdit( $id );
+
+		$item->title = 'fHKkjfhf fdhfkdkfj dfhdjkhfk 12212';
+
+		$v['tittle_after'] = $item->title;
+		$v['getAttribute'] = $item->getAttribute( 'title' );
+		$v['attributesToArray'] = $item->attributesToArray();
+		$v['attributes'] = $item->attributes['title'];
+		$v['getAttributeValue'] = $item->getAttributeValue( 'title' );
+		$v['hasGetMutator for title'] = $item->hasGetMutator( 'title' );
+		$v['toArray'] = $item->toArray();
+
+		dd( $v, $item );
+
 		if (empty( $item )) {
 			abort( 404 );
 		}
