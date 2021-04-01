@@ -12,7 +12,7 @@ use Illuminate\Http\Request;
 class CategoryController extends BaseController
 {
 
-	/**@var BlogCategoryRepository*/
+	/**@var BlogCategoryRepository */
 
 	private $blogCategoryRepository;
 
@@ -23,8 +23,9 @@ class CategoryController extends BaseController
 	{
 		parent::__construct();
 
-		$this->blogCategoryRepository = app(BlogCategoryRepository::class);
+		$this->blogCategoryRepository = app( BlogCategoryRepository::class );
 	}
+
 	/**
 	 * Display a listing of the resource.
 	 *
@@ -33,7 +34,7 @@ class CategoryController extends BaseController
 	public function index()
 	{
 
-		$paginator = $this->blogCategoryRepository->getAllWithPaginate(5);
+		$paginator = $this->blogCategoryRepository->getAllWithPaginate( 5 );
 
 		return view( 'blog.admin.categories.index', compact( 'paginator' ) );
 	}
@@ -58,27 +59,22 @@ class CategoryController extends BaseController
 	/**
 	 * Store a newly created resource in storage.
 	 *
-	 * @param  \Illuminate\Http\Request $request
+	 * @param BlogCategoryCreateRequest $request
 	 * @return \Illuminate\Http\Response
 	 */
 	public function store(BlogCategoryCreateRequest $request)
 	{
 		$data = $request->input(); /* получаем данные*/
 
-		/*Ушло в обсервер
-		 * if (empty( $data['slug'] )) {
-			$data['slug'] = \Str::slug( $data['title'] );
-		}*/
-
 		//создаем объект и добавляем в БД
 		$item = (new BlogCategory())->create( $data );
 
 		if ($item) {
 			return redirect()->route( 'blog.admin.categories.edit', [$item->id] )
-					->with( ['success' => 'Успешно сохранено'] );
+				->with( ['success' => 'Успешно сохранено'] );
 		} else {
 			return back()->withErrors( ['msg' => 'Ошибка сохрания'] )
-						->withInput();
+				->withInput();
 		}
 	}
 
@@ -93,8 +89,8 @@ class CategoryController extends BaseController
 	{
 
 		$item = $this->blogCategoryRepository->getEdit( $id );
-		if(empty($item)) {
-			abort(404);
+		if (empty( $item )) {
+			abort( 404 );
 		}
 		$categoryList
 			= $this->blogCategoryRepository->getForComboBox(); /*выподающий список*/
@@ -113,7 +109,7 @@ class CategoryController extends BaseController
 	public function update(BlogCategoryUpdateRequest $request, $id)
 	{
 
-		$item = $this->blogCategoryRepository->getEdit($id);
+		$item = $this->blogCategoryRepository->getEdit( $id );
 		if (empty( $item )) {
 			return back()
 				->withErrors( ['msg' => "Запись id=[{$id}] не найдена"] )
@@ -122,11 +118,6 @@ class CategoryController extends BaseController
 
 		$data = $request->all();
 
-		/*
-		 * обсервер
-		 * if (empty( $data['slug'] )) {
-			$data['slug'] = \Str::slug( $data['title'] );
-		}*/
 
 		$request = $item->update( $data );
 //			->fill( $data )
