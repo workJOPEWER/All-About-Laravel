@@ -145,8 +145,21 @@ class PostController extends BaseController
 	 * @param  int $id
 	 * @return \Illuminate\Http\Response
 	 */
-	public function destroy($id, $request)
+	public function destroy($id)
 	{
-		dd( __METHOD__, $request->all(), $id );
+		/*//софт-удаление, в бд остается
+		$result = BlogPost::destroy( $id );*/
+
+		//полное удаление бд
+		$result = BlogPost::find( $id )->forceDelete();
+
+		if ($result) {
+			return redirect()
+				->route( 'blog.admin.posts.index' )
+				->with( ['success' => "Запись id[$id] удалена"] );
+		} else {
+			return back()->withErrors( ['msg' => 'Ошибка удаления'] );
+		}
+
 	}
 }
