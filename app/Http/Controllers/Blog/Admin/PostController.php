@@ -4,6 +4,8 @@ namespace App\Http\Controllers\Blog\Admin;
 
 use App\Http\Requests\BlogPostCreateRequest;
 use App\Http\Requests\BlogPostUpdateRequest;
+use App\Jobs\BlogPostAfterCreateJob;
+use App\Jobs\BlogPostAfterDeleteJob;
 use App\Models\BlogPost;
 use App\Repositories\BlogCategoryRepository;
 use App\Repositories\BlogPostRepository;
@@ -62,10 +64,12 @@ class PostController extends BaseController
 	public function store(BlogPostCreateRequest $request)
 	{
 		$data = $request->input();
-		$item = (new BlogPost())
-			->create( $data );
+		$item = BlogPost::create($data);
 
 		if ($item) {
+			$job = new BlogPostAfterCreateJob($item);
+			$this->dispatch($job);
+
 			return redirect()->route( 'blog.admin.posts.edit', [$item->id] )
 				->with( ['success' => ' Vse okeushki'] );
 		} else {
@@ -154,6 +158,20 @@ class PostController extends BaseController
 		$result = BlogPost::find( $id )->forceDelete();
 
 		if ($result) {
+
+			BlogPostAfterDeleteJob::dispatch($id);
+
+			// Варианты запуска:
+
+//			BlogPostAfterDeleteJob::dispatchNow($id);
+
+//			dispatch(new BlogPostAfterDeleteJob($id));
+//			dispatch_now(new BlogPostAfterDeleteJob($id));
+
+//			$this->dispatch(new BlogPostAfterDeleteJob($id));
+//			$this->dispatchNow(new BlogPostAfterDeleteJob($id));
+
+
 			return redirect()
 				->route( 'blog.admin.posts.index' )
 				->with( ['success' => "Запись id[$id] удалена"] );

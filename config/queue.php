@@ -38,6 +38,8 @@ return [
             'driver' => 'database',
             'table' => 'jobs',
             'queue' => 'default',
+			//если задание выполняется более [retry_after]сек без удаления,
+			//то задача вновь вернется в очередь для повторного запуска.
             'retry_after' => 90,
             'after_commit' => false,
         ],
