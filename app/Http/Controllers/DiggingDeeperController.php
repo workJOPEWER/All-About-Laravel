@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use App\Jobs\GenerateCatalog\GenerateCatalogMainJob;
+use App\Jobs\ProcessVideoJob;
 use App\Models\BlogPost;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
@@ -132,12 +134,31 @@ class DiggingDeeperController extends Controller
 //
 //		dd( compact( 'filtered' ) );
 
-		//сортировочка
-		$sortedSimpleCollection = collect( [5, 3, 1, 2, 4] )->sort();
-		$sortedAscCollection = $collection->sortBy( 'created_at' );
-		$sortedDescCollection = $collection->sortByDesc( 'item_id' );
+//		//сортировочка
+//		$sortedSimpleCollection = collect( [5, 3, 1, 2, 4] )->sort();
+//		$sortedAscCollection = $collection->sortBy( 'created_at' );
+//		$sortedDescCollection = $collection->sortByDesc( 'item_id' );
 
-		dd( compact( 'sortedSimpleCollection', 'sortedAscCollection', 'sortedDescCollection' ) );
+//		dd( compact( 'sortedSimpleCollection', 'sortedAscCollection', 'sortedDescCollection' ) );
 
+	}
+
+	public function processVideo()
+	{
+		ProcessVideoJob::dispatch()
+			//Отсрочка выполнения задания от момента посещения в очередь.
+			//не влияет на паузу между попытками выполнять задачу.
+			//->delay(10)
+			//->onQueue('name_of_queue")
+		;
+	}
+
+	/**
+	 *
+	 */
+
+	public function prepareCatalog()
+	{
+		GenerateCatalogMainJob::dispatch();
 	}
 }
