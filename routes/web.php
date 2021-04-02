@@ -24,6 +24,11 @@ Route::group( ['namespace' => 'Blog', 'prefix' => 'blog'], function () {
 	Route::resource( 'posts', '\App\Http\Controllers\Blog\PostController' )->names( 'blog.posts' );
 } );
 
+Route::group(['prefix'=> 'digging_deeper',], function () {
+	Route::get('collections', [\App\Http\Controllers\DiggingDeeperController::class, 'collections'])->name('digging_deeper.collections');
+});
+
+
 //admin panel
 $groupData = [
 	'namespace' => 'Blog\Admin',
